@@ -2,22 +2,38 @@
 const gameSelections = (() => {
     const human = document.querySelector('.human-human');
     const computer = document.querySelector('.human-ai');
+    const resetBtn = document.querySelector('.reset-game');
+
+    resetBtn.addEventListener('click', () => window.location.reload());
 
     human.addEventListener('click', humanSelection);
     computer.addEventListener('click', computerSelection);
 
     function humanSelection() {
-        humanGameBoard();
         human.classList.add('selected');
         computer.classList.remove('selected');
+        selectedGameMode();
+        resetBtn.style.display = 'block'
     }
 
     function computerSelection() {
-        computerGameBoard();
         computer.classList.add('selected');
         human.classList.remove('selected');
+        selectedGameMode();
     }
 })();
+
+const selectedGameMode = () => {
+    const humanMode = document.querySelector('.human-human');
+    const computerMode = document.querySelector('.human-ai');
+
+    if(humanMode.classList.contains('selected')) { 
+        humanGameBoard(); 
+        console.log('humans');
+    }
+    else if(computerMode.classList.contains('selected')) computerGameBoard();
+    console.log('running')
+}
 
 // Handles game winning/drawing conditions
 const gameLogic = (() => {
@@ -37,11 +53,14 @@ const humanGameBoard = () => {
     let circleTurn;
     const circleClass = 'circle';
     const xClass = 'x';
-    
+    let currentClass;
     gameGrid.classList.add(xClass);
 
     cellBlocks.forEach(cell => {
-        cell.addEventListener('click', handleClick, { once: true})
+        cell.classList.remove(xClass);
+        cell.classList.remove(circleClass);
+        cell.removeEventListener('click', handleClick);
+        cell.addEventListener('click', handleClick, { once: true});
     });
 
     function handleClick(e) {
@@ -56,7 +75,6 @@ const humanGameBoard = () => {
         // switch turns
         switchTurns();
         boardHoverClass();
-        console.log(currentClass);
         return currentClass;
     };
 
@@ -77,9 +95,9 @@ const humanGameBoard = () => {
             gameGrid.classList.add(xClass);
         };
     }
-
 };
 
-const computerGameBoard = () => {
 
+const computerGameBoard = () => {
+    
 };

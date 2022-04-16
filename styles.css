@@ -226,6 +226,7 @@ body{
     color: var(--textColor);
     text-shadow: 2px 2px var(--shadow);
     font-size: 1.25rem;
+    display: none;
 }
 
 #score-board .reset .reset-game:hover {

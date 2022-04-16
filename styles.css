@@ -36,7 +36,7 @@ body{
     align-content: center;
     justify-items: center;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 0.5fr 2fr 1fr 0.5fr;
+    grid-template-rows: 0.5fr 0.75fr 1.25fr 1fr 0.5fr;
     height: 100vh;
     width: 100vw;
 }
@@ -49,18 +49,30 @@ body{
     color: var(--textColor);
     text-shadow: 2px 2px var(--shadow);
     font-size: 6rem;
+    -webkit-animation: flash linear 1.5s infinite;
+    animation: flash linear 1.5s infinite;
 }
 
-/* THIS NEEDS TO BE ITS OWN GRID SECTION */
+@-webkit-keyframes flash {
+    0% { opacity: 1; }
+    50% { opacity: 0.1; }
+    100% { opacity: 1 }
+}
+
+@keyframes flash {
+    0% { opacity: 1; }
+    50% { opacity: 0.1; }
+    100% { opacity: 1 }
+}
+
 #game-selection {
     grid-row: 2 / 3;
     grid-column: 1 / 4;
     justify-self: center;
-    align-self: start;
     display: flex;
     gap: 5rem;
-    margin-top: 3rem;
     color: var(--textColor);
+    text-shadow: 2px 2px var(--shadow);
 }
 
 #game-selection div {
@@ -79,17 +91,14 @@ body{
     width: auto;
 }
 
-/* THIS NEEDS TO BE ITS OWN GRID SECTION */
 #game-grid {
     grid-column: 2 / 3;
-    grid-row: 2 / 3;
+    grid-row: 3 / 4;
     display: grid;
     grid-template-columns: repeat(3, auto);
     gap: 10px;
     width: calc((var(--cellSize) * 3) + 40px);
     height: calc((var(--cellSize) * 3) + 40px);
-    align-self: end;
-    margin-bottom: 3rem;
 
     padding: 10px;
     background-color: var(--gameBackground);
@@ -104,7 +113,7 @@ body{
 
 #score-board {
     grid-column: 1 / 4;
-    grid-row: 3 / 4;
+    grid-row: 4 / 5;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 0.25fr 1.75fr;
@@ -124,6 +133,12 @@ body{
 
 #score-board .score-board-title {
     grid-column: 1 / 4;
+}
+
+#score-board .round-update {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    align-self: center;
 }
 
 #score-board .x-score {
@@ -150,7 +165,7 @@ body{
 }
 
 #footer {
-    grid-row: 4 / 5;
+    grid-row: 5 / 6;
     grid-column: 1 / 4;
     color: var(--textColor);
     text-shadow: var(--shadow);

@@ -52,10 +52,10 @@ const gameLogic = (() => {
             })
         })
     }
-    // THIS ISNT WORKING PROPERLY NEED TO FIX
+
     function isDraw() {
         return [...cellBlocks].every(cell => {
-            cell.classList.contains('x') || 
+            return cell.classList.contains('x') || 
             cell.classList.contains('circle');
         })
     }
@@ -91,7 +91,7 @@ const humanGameBoard = () => {
         currentClass = circleTurn ? circleClass : xClass;
         // place mark
         placeMarker(cell, currentClass);
-        // check for win THIS NEEDS SOME CHANGING MAYBE TOO
+        // check for win 
         if(gameLogic.checkWin(currentClass)) {
             roundOver(false);
         } else if(gameLogic.isDraw()) {
@@ -120,7 +120,7 @@ const humanGameBoard = () => {
             gameGrid.classList.add(xClass);
         };
     }
-    //POTENTIALLY CHANGE THIS AS WELL
+    
     function roundOver(draw) {
         if(draw) {
             roundMessage.textContent = 'Draw!';

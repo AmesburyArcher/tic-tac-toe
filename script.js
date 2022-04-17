@@ -43,12 +43,35 @@ const gameLogic = (() => {
         [0,4,8], [2,4,6]
     ];
 
+    const cellBlocks = document.querySelectorAll('.game-cell');
+
+    function checkWin(currentClass) {
+        return winningCombos.some(combination => {
+            return combination.every(index => {
+                return cellBlocks[index].classList.contains(currentClass)
+            })
+        })
+    }
+    // THIS ISNT WORKING PROPERLY NEED TO FIX
+    function isDraw() {
+        return [...cellBlocks].every(cell => {
+            cell.classList.contains('x') || 
+            cell.classList.contains('circle');
+        })
+    }
+
+    return {
+        checkWin,
+        isDraw
+    }
+
 })();
 
 // Handles the game grid with a human vs human selection
 const humanGameBoard = () => {
     const cellBlocks = document.querySelectorAll('.game-cell');
     const gameGrid = document.querySelector('#game-grid');
+    const roundMessage = document.querySelector('.round-update');
 
     let circleTurn;
     const circleClass = 'circle';
@@ -68,14 +91,16 @@ const humanGameBoard = () => {
         currentClass = circleTurn ? circleClass : xClass;
         // place mark
         placeMarker(cell, currentClass);
-        // check for win
-
-        // check for draw
-
-        // switch turns
+        // check for win THIS NEEDS SOME CHANGING MAYBE TOO
+        if(gameLogic.checkWin(currentClass)) {
+            roundOver(false);
+        } else if(gameLogic.isDraw()) {
+            roundOver(true);
+            console.log('tie');
+        } else {
         switchTurns();
         boardHoverClass();
-        return currentClass;
+        }
     };
 
     function placeMarker(cell, currentClass) {
@@ -94,6 +119,14 @@ const humanGameBoard = () => {
         } else {
             gameGrid.classList.add(xClass);
         };
+    }
+    //POTENTIALLY CHANGE THIS AS WELL
+    function roundOver(draw) {
+        if(draw) {
+            roundMessage.textContent = 'Draw!';
+        } else {
+            roundMessage.textContent = `${circleTurn ? 'Circle\'s wins this round!' : 'X\'s wins this round!'}`
+        }
     }
 };
 

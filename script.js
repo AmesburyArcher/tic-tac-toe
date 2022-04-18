@@ -1,32 +1,9 @@
-// Global properties
-// const MyApp = {
-//     gridListener: function() {
-//         const circleClass = 'circle';
-//         const xClass = 'x';
-//         const cellBlocks = document.querySelectorAll('.game-cell');
-//         let handleClickPub = Object.create(humanGameBoard());
+// global object
+const MyApp = {
+    gameModeHuman: {
 
-//         cellBlocks.forEach(cell => {
-//             cell.classList.remove(xClass);
-//             cell.classList.remove(circleClass);
-//             cell.removeEventListener('click', handleClickPub.handleClick);
-//             cell.addEventListener('click', handleClickPub.handleClick, { once: true});
-//         });
-//     },
-
-//     removeGridListener: function() {
-//         const circleClass = 'circle';
-//         const xClass = 'x';
-//         const cellBlocks = document.querySelectorAll('.game-cell');
-//         let handleClickPub = Object.create(humanGameBoard());
-
-//         cellBlocks.forEach(cell => {
-//             cell.classList.remove(xClass);
-//             cell.classList.remove(circleClass);
-//             cell.removeEventListener('click', handleClickPub.handleClick);
-//         });
-//     }
-// }
+    }
+}
 
 // Handles selections made by the user on the DOM
 const gameSelections = (() => {
@@ -42,28 +19,22 @@ const gameSelections = (() => {
     function humanSelection() {
         human.classList.add('selected');
         computer.classList.remove('selected');
-        selectedGameMode();
-        resetBtn.style.display = 'block'
+        computer.style.display = 'none';
+        resetBtn.style.display = 'block';
+        MyApp.gameModeHuman = true;
+        gameBoard();
     }
 
     function computerSelection() {
         computer.classList.add('selected');
         human.classList.remove('selected');
-        selectedGameMode();
+        human.style.display = 'none';
+        resetBtn.style.display = 'block';
+        MyApp.gameModeHuman = false;
+        gameBoard();
     }
+
 })();
-
-const selectedGameMode = () => {
-    const humanMode = document.querySelector('.human-human');
-    const computerMode = document.querySelector('.human-ai');
-
-    if(humanMode.classList.contains('selected')) { 
-        humanGameBoard(); 
-    }
-    else if(computerMode.classList.contains('selected')) {
-        computerGameBoard();
-    }
-}
 
 // Handles game winning/drawing conditions
 const gameLogic = (() => {
@@ -97,77 +68,128 @@ const gameLogic = (() => {
 
 })();
 
-// Handles the game grid with a human vs human selection
-const humanGameBoard = () => {
+// Handles the game grid
+const gameBoard = () => {
+    let circleTurn;
     const cellBlocks = document.querySelectorAll('.game-cell');
+    const circleClass = 'circle';
+    const xClass = 'x';
     const gameGrid = document.querySelector('#game-grid');
     const roundMessage = document.querySelector('.round-update');
     const xScore = document.querySelector('.x-tally');
     const oScore = document.querySelector('.o-tally');
 
-    let circleTurn;
-    const circleClass = 'circle';
-    const xClass = 'x';
-    let currentClass;
-    gameGrid.classList.add(xClass);
-
-    cellBlocks.forEach(cell => {
-        cell.classList.remove(xClass);
-        cell.classList.remove(circleClass);
-        cell.removeEventListener('click', handleClick);
-        cell.addEventListener('click', handleClick, { once: true});
-    });
-
-    function handleClick(e) {
-        const cell = e.target;
-        currentClass = circleTurn ? circleClass : xClass;
-        // place mark
-        placeMarker(cell, currentClass);
-        // check for win 
-        if(gameLogic.checkWin(currentClass)) {
-            roundOver(false);
-        } else if(gameLogic.isDraw()) {
-            roundOver(true);
-            console.log('tie');
-        } else {
-        switchTurns();
-        boardHoverClass();
-        }
-    };
-
-    function placeMarker(cell, currentClass) {
-        cell.classList.add(currentClass);
-    };
-
-    function switchTurns() {
-        circleTurn = !circleTurn;
-    };
-
-    function boardHoverClass() {
-        gameGrid.classList.remove(xClass);
-        gameGrid.classList.remove(circleClass);
-        if(circleTurn) {
-            gameGrid.classList.add(circleClass);
-        } else {
+    if(MyApp.gameModeHuman === true) {
+        const humanGameBoard = () => {
+            let currentClass;
             gameGrid.classList.add(xClass);
-        };
-    }
-    
-    function roundOver(draw) {
-        if(draw) {
-            roundMessage.textContent = 'Draw!';
-            humanGameBoard();
 
-        } else {
-            roundMessage.textContent = `${circleTurn ? 'Circle\'s win this round!' : 'X\'s win this round!'}`;
-            circleTurn ? oScore.textContent++ : xScore.textContent++;
-            humanGameBoard();
+            const handleClick = (e) => {
+                const cell = e.target;
+                currentClass = circleTurn ? circleClass : xClass;
+
+                placeMarker(cell, currentClass);
+                if(gameLogic.checkWin(currentClass)) {
+                    roundOver(false);
+                } else if(gameLogic.isDraw()) {
+                    roundOver(true);
+                    console.log('tie');
+                } else {
+                switchTurns();
+                boardHoverClass();
+                }
+            };
+
+            cellBlocks.forEach(cell => {
+                cell.classList.remove(xClass);
+                cell.classList.remove(circleClass);
+                cell.removeEventListener('click', handleClick, { once: true });
+                cell.addEventListener('click', handleClick, { once: true });
+            });
+
+            function placeMarker(cell, currentClass) {
+                cell.classList.add(currentClass);
+            };
+
+            function switchTurns() {
+                circleTurn = !circleTurn;
+            };
+
+            function boardHoverClass() {
+                gameGrid.classList.remove(xClass);
+                gameGrid.classList.remove(circleClass);
+                if(circleTurn) {
+                    gameGrid.classList.add(circleClass);
+                } else {
+                    gameGrid.classList.add(xClass);
+                };
+            }
+            
+            function roundOver(draw) {
+                if(draw) {
+                    roundMessage.textContent = 'Draw!';
+                    humanGameBoard();
+
+                } else {
+                    roundMessage.textContent = `${circleTurn ? 'Circle\'s win this round!' : 'X\'s win this round!'}`;
+                    circleTurn ? oScore.textContent++ : xScore.textContent++;
+                    humanGameBoard();
+                }
+            }
         }
-    }
+    humanGameBoard();
+    } 
 
-};
+    if(MyApp.gameModeHuman === false) {
+        gameGrid.classList.add(xClass);
+        let currentClass;
 
+        const handleHumanClick = (e) => {
+            const cell = e.target;
+            currentClass = circleTurn ? circleClass : xClass;
 
-const computerGameBoard = () => {
+            if(cell.classList.contains(xClass) ||
+            cell.classList.contains(circleClass)){
+                return
+            } else {
+                placeMarker(cell, currentClass)
+                switchTurn();
+                computerTurn();
+            }
+        
+        }
+
+        cellBlocks.forEach(cell => {
+            cell.classList.remove(xClass);
+            cell.classList.remove(circleClass);
+            cell.removeEventListener('click', handleHumanClick);
+            cell.addEventListener('click', handleHumanClick,);
+        });
+
+        function placeMarker(cell, currentClass) {
+            cell.classList.add(currentClass);
+        };
+
+        function switchTurn() {
+            circleTurn = !circleTurn;
+        }
+
+        function computerTurn() {
+            let emptyCells = [];
+            let random;
+
+            cellBlocks.forEach(cell => {
+                if(!cell.classList.contains(xClass || circleClass)) {
+                    emptyCells.push(cell)
+                }
+            })
+
+            random = Math.ceil(Math.random() * emptyCells.length) -1;
+            emptyCells[random].classList.add(circleClass);
+            switchTurn();
+        }
+       
+        
     
 };
+}

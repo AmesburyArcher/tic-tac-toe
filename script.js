@@ -13,8 +13,8 @@ const gameSelections = (() => {
 
     resetBtn.addEventListener('click', () => window.location.reload());
 
-    human.addEventListener('click', humanSelection);
-    computer.addEventListener('click', computerSelection);
+    human.addEventListener('click', humanSelection, { once: true });
+    computer.addEventListener('click', computerSelection, { once: true });
 
     function humanSelection() {
         human.classList.add('selected');
@@ -93,7 +93,6 @@ const gameBoard = () => {
                     roundOver(false);
                 } else if(gameLogic.isDraw()) {
                     roundOver(true);
-                    console.log('tie');
                 } else {
                 switchTurns();
                 boardHoverClass();
@@ -141,23 +140,9 @@ const gameBoard = () => {
     } 
 
     if(MyApp.gameModeHuman === false) {
+        const computerGameBoard = () => {
         gameGrid.classList.add(xClass);
         let currentClass;
-
-        const handleHumanClick = (e) => {
-            const cell = e.target;
-            currentClass = circleTurn ? circleClass : xClass;
-
-            if(cell.classList.contains(xClass) ||
-            cell.classList.contains(circleClass)){
-                return
-            } else {
-                placeMarker(cell, currentClass)
-                switchTurn();
-                computerTurn();
-            }
-        
-        }
 
         cellBlocks.forEach(cell => {
             cell.classList.remove(xClass);
@@ -165,6 +150,56 @@ const gameBoard = () => {
             cell.removeEventListener('click', handleHumanClick);
             cell.addEventListener('click', handleHumanClick,);
         });
+
+        function handleHumanClick(e) {
+            const cell = e.target;
+
+            if(cell.classList.contains(xClass) ||
+            cell.classList.contains(circleClass)){
+                return
+            } 
+            else {
+                if(!circleTurn){
+                currentClass = xClass
+                placeMarker(cell, currentClass)
+                }
+            }
+
+            if(gameLogic.checkWin(currentClass)) {
+                roundOver(false);
+            } else if(gameLogic.isDraw()) {
+                roundOver(true);
+            } else {
+                switchTurn();
+                computerTurn();
+            }
+            
+        }
+
+        function roundOver(draw) {
+            if(draw) {
+                roundMessage.textContent = 'Draw!';
+                cellBlocks.forEach(cell => {
+                    cell.classList.remove(xClass);
+                    cell.classList.remove(circleClass);
+                    cell.removeEventListener('click', handleHumanClick);
+                    cell.addEventListener('click', handleHumanClick,);
+                });
+                switchTurn();
+                if(circleTurn) computerTurn();
+            } else {
+                roundMessage.textContent = `${circleTurn ? 'Circle\'s win this round!' : 'X\'s win this round!'}`;
+                circleTurn ? oScore.textContent++ : xScore.textContent++;
+                cellBlocks.forEach(cell => {
+                    cell.classList.remove(xClass);
+                    cell.classList.remove(circleClass);
+                    cell.removeEventListener('click', handleHumanClick);
+                    cell.addEventListener('click', handleHumanClick,);
+                });
+                switchTurn();
+                if(circleTurn) computerTurn();
+            }
+        }
 
         function placeMarker(cell, currentClass) {
             cell.classList.add(currentClass);
@@ -175,21 +210,30 @@ const gameBoard = () => {
         }
 
         function computerTurn() {
+            currentClass = circleClass
             let emptyCells = [];
             let random;
 
             cellBlocks.forEach(cell => {
-                if(!cell.classList.contains(xClass || circleClass)) {
+                if(!cell.classList.contains(xClass) &&
+                !cell.classList.contains(circleClass)) {
                     emptyCells.push(cell)
                 }
             })
 
-            random = Math.ceil(Math.random() * emptyCells.length) -1;
-            emptyCells[random].classList.add(circleClass);
-            switchTurn();
-        }
-       
-        
-    
+            if(emptyCells.length > 0 && circleTurn) {
+                random = Math.ceil(Math.random() * emptyCells.length) -1;
+                emptyCells[random].classList.add(circleClass);
+            }  
+            if(gameLogic.checkWin(currentClass)) {
+                roundOver(false);
+            } else if(gameLogic.isDraw()) {
+                roundOver(true);
+            } else {
+                switchTurn();
+            }
+        } 
 };
+computerGameBoard();
+    }
 }

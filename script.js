@@ -1,3 +1,33 @@
+// Global properties
+// const MyApp = {
+//     gridListener: function() {
+//         const circleClass = 'circle';
+//         const xClass = 'x';
+//         const cellBlocks = document.querySelectorAll('.game-cell');
+//         let handleClickPub = Object.create(humanGameBoard());
+
+//         cellBlocks.forEach(cell => {
+//             cell.classList.remove(xClass);
+//             cell.classList.remove(circleClass);
+//             cell.removeEventListener('click', handleClickPub.handleClick);
+//             cell.addEventListener('click', handleClickPub.handleClick, { once: true});
+//         });
+//     },
+
+//     removeGridListener: function() {
+//         const circleClass = 'circle';
+//         const xClass = 'x';
+//         const cellBlocks = document.querySelectorAll('.game-cell');
+//         let handleClickPub = Object.create(humanGameBoard());
+
+//         cellBlocks.forEach(cell => {
+//             cell.classList.remove(xClass);
+//             cell.classList.remove(circleClass);
+//             cell.removeEventListener('click', handleClickPub.handleClick);
+//         });
+//     }
+// }
+
 // Handles selections made by the user on the DOM
 const gameSelections = (() => {
     const human = document.querySelector('.human-human');
@@ -29,10 +59,10 @@ const selectedGameMode = () => {
 
     if(humanMode.classList.contains('selected')) { 
         humanGameBoard(); 
-        console.log('humans');
     }
-    else if(computerMode.classList.contains('selected')) computerGameBoard();
-    console.log('running')
+    else if(computerMode.classList.contains('selected')) {
+        computerGameBoard();
+    }
 }
 
 // Handles game winning/drawing conditions
@@ -72,6 +102,8 @@ const humanGameBoard = () => {
     const cellBlocks = document.querySelectorAll('.game-cell');
     const gameGrid = document.querySelector('#game-grid');
     const roundMessage = document.querySelector('.round-update');
+    const xScore = document.querySelector('.x-tally');
+    const oScore = document.querySelector('.o-tally');
 
     let circleTurn;
     const circleClass = 'circle';
@@ -124,10 +156,15 @@ const humanGameBoard = () => {
     function roundOver(draw) {
         if(draw) {
             roundMessage.textContent = 'Draw!';
+            humanGameBoard();
+
         } else {
-            roundMessage.textContent = `${circleTurn ? 'Circle\'s wins this round!' : 'X\'s wins this round!'}`
+            roundMessage.textContent = `${circleTurn ? 'Circle\'s win this round!' : 'X\'s win this round!'}`;
+            circleTurn ? oScore.textContent++ : xScore.textContent++;
+            humanGameBoard();
         }
     }
+
 };
 
 

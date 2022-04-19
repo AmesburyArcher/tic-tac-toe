@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'retronoidregular';
-    src: url('../assets/retronoid-n8vy-webfont.woff2') format('woff2');
-    src: url('../assets/retronoid-n8vy-webfont.woff') format('woff');
+    src: url('../assets/retronoid-n8vy-webfont.woff2') format('woff2'),
+         url('../assets/retronoid-n8vy-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 

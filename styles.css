@@ -212,10 +212,29 @@ body{
 }
 
 #score-board .round-update {
+    display: block;
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     align-self: center;
     text-align: center;
+    width: fit-content;
+    padding-right: 0.25ch;
+    animation: blink .5s step-end infinite alternate;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid;
+}
+
+@keyframes blink {
+    50% {
+      border-color: transparent
+    }
+}
+      
+@-webkit-keyframes blink {
+    50% {
+      border-color: transparent
+    }
 }
 
 #score-board .reset {

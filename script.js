@@ -127,12 +127,25 @@ const gameBoard = () => {
             function roundOver(draw) {
                 if(draw) {
                     roundMessage.textContent = 'Draw!';
-                    humanGameBoard();
-
+                    cellBlocks.forEach(cell => {
+                        cell.classList.remove(xClass);
+                        cell.classList.remove(circleClass);
+                        cell.removeEventListener('click', handleClick, { once: true });
+                        cell.addEventListener('click', handleClick, { once: true });
+                    });
+                    switchTurns();
+                    boardHoverClass();
                 } else {
                     roundMessage.textContent = `${circleTurn ? 'Circle\'s win this round!' : 'X\'s win this round!'}`;
                     circleTurn ? oScore.textContent++ : xScore.textContent++;
-                    humanGameBoard();
+                    cellBlocks.forEach(cell => {
+                        cell.classList.remove(xClass);
+                        cell.classList.remove(circleClass);
+                        cell.removeEventListener('click', handleClick, { once: true });
+                        cell.addEventListener('click', handleClick, { once: true });
+                    });
+                    switchTurns();
+                    boardHoverClass();
                 }
             }
         }

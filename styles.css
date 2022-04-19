@@ -82,10 +82,14 @@ body{
     border: 1px solid var(--outline);
     background-color: var(--cellBackground);
     width: 275px;
-    height: 100px;
+    height: 80px;
     padding: 0 0.5rem 0 0.5rem;
     cursor: pointer;
     transition: 1s all ease;
+}
+
+#game-selection div:hover {
+    transform: scale(1.10);
 }
 
 #game-selection .selected {
@@ -233,6 +237,7 @@ body{
 
 #score-board .reset .reset-game:hover {
     transform: scale(1.05);
+    transition: 1s all ease;
 }
 
 #score-board .x-score {
